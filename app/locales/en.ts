@@ -196,7 +196,31 @@ const en: LocaleType = {
       Title: "Input Template",
       SubTitle: "Newest message will be filled to this template",
     },
-
+    Color: {
+      Title: "background color",
+      SubTitle: "The background color of the video content",
+    },
+    Backimg: {
+      Title: "video background",
+      SubTitle: "Background selection of video content",
+      BackimgTitle: "background image",
+    },
+    Backcheck: {
+      Title: "Video background selection",
+      SubTitle: "Video background form",
+    },
+    AutoTitleGeneration: {
+      Title: "Whether to generate subtitles",
+      SubTitle: "Generate video captions based on the conversation",
+    },
+    Voicecheck: {
+      Title: "Video voice selection",
+      SubTitle: "Select play sound",
+    },
+    Personmodel: {
+      Title: "Character model selection",
+      SubTitle: "Select character model",
+    },
     Update: {
       Version: (x: string) => `Version: ${x}`,
       IsLatest: "Latest version",
@@ -204,6 +228,7 @@ const en: LocaleType = {
       IsChecking: "Checking update...",
       FoundUpdate: (x: string) => `Found new version: ${x}`,
       GoToUpdate: "Update",
+      Preview: "Preview",
     },
     SendKey: "Send Key",
     Theme: "Theme",
