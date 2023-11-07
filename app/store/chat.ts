@@ -411,7 +411,7 @@ export const useChatStore = create<ChatStore>()(
             content += `::[${index + 1}]${img.filename}`;
           });
         }
-        console.log("--------- 分割线-------+内容 将发放请求");
+
         const userContent = fillTemplateWith(content, modelConfig);
         console.log("输入: ", userContent);
         const userMessage: ChatMessage = createMessage({
@@ -553,9 +553,9 @@ export const useChatStore = create<ChatStore>()(
               "NjA0YzgzMDNkZDZlNGMwYjliNzdiNzg3NjRhMTc3OGItMTY5Nzc2NDg3Ng==";
             //   const options = {
             //     method: 'GET',
-            //     headers: {accept: 'application/json', 'x-api-key': 'YWI0MDAyM2I1ODI3NDY0MWExODExYTY0ZWY5MmNlYjQtMTY5ODk5ODM1NQ=='}
+            //     headers: {accept: 'application/json', 'x-api-key': apiKey}
             //   };
-              
+
             //   fetch('https://api.heygen.com/v1/talking_photo.list', options)
             //     .then(response => response.json())
             //     .then(response => console.log(response))
@@ -581,7 +581,7 @@ export const useChatStore = create<ChatStore>()(
                                 : "Joon-incasualsuit-20220821",
                             avatar_style: "normal",
                             // type: "talking_photo",
-                            // talking_photo_id: "84427a82d3cc4aedb60773480fdda70d"
+                            // talking_photo_id: "ba9c11684315405aac1dd8ed987fdda2"
                           },
                           voice: {
                             type: "text",
@@ -637,10 +637,11 @@ export const useChatStore = create<ChatStore>()(
                       },
                     });
                     const videoData = await response.json();
+
                     if (videoData.code === 100) {
                       const status = videoData.data.status;
                       if (status === "processing" || status === "waiting") {
-                        setTimeout(checkVideoStatus, 1000);
+                        setTimeout(checkVideoStatus, 2000);
                       } else if (status === "completed") {
                         botMessage.streaming = false;
                         botMessage.content = videoData.data.video_url;
