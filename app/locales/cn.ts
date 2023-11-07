@@ -186,6 +186,28 @@ const cn = {
       Title: "字体大小",
       SubTitle: "聊天内容的字体大小",
     },
+    Color: {
+      Title: "背景颜色",
+      SubTitle: "视频内容的背景颜色",
+    },
+    Backimg: {
+      Title: "视频背景",
+      SubTitle: "视频内容的背景选择",
+      BackimgTitle: "背景图",
+    },
+    Backcheck: {
+      Title: "视频背景选择",
+      SubTitle: "视频背景形式",
+      
+    },
+    Voicecheck:{
+      Title: "视频人声选择",
+      SubTitle: "选择播放声音",
+    },
+    Personmodel:{
+      Title: "人物模型选择",
+      SubTitle: "选择人物模型",
+    },
     InjectSystemPrompts: {
       Title: "注入系统级提示信息",
       SubTitle: "强制给每次请求的消息列表开头添加一个模拟 ChatGPT 的系统提示",
@@ -202,6 +224,7 @@ const cn = {
       IsChecking: "正在检查更新...",
       FoundUpdate: (x: string) => `发现新版本：${x}`,
       GoToUpdate: "前往更新",
+      Preview:"预览"
     },
     SendKey: "发送键",
     Theme: "主题",
@@ -213,6 +236,10 @@ const cn = {
     AutoGenerateTitle: {
       Title: "自动生成标题",
       SubTitle: "根据对话内容生成合适的标题",
+    },
+    AutoTitleGeneration: {
+      Title: "是否生成字幕",
+      SubTitle: "根据对话内容生成视频字幕",
     },
     Mask: {
       Splash: {
