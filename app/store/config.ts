@@ -19,19 +19,38 @@ export enum Theme {
   Dark = "dark",
   Light = "light",
 }
+export enum checkFlag {
+  Auto = "背景颜色",
+  First = "图片背景",
+  Second = "视频背景",
+}
+export enum voiceCheck {
+  Female = "男声",
+  Male = "女声",
+}
+export enum personModel {
+  FemaleModel = "男生",
+  MaleModel = "女生",
+}
 
 export const DEFAULT_CONFIG = {
   submitKey: SubmitKey.CtrlEnter as SubmitKey,
   avatar: "1f603",
   fontSize: 14,
+  checkFlag: checkFlag.Auto as checkFlag,
+  voiceCheck: voiceCheck.Female as voiceCheck,
+  personModel: personModel.FemaleModel as personModel,
+  backColor: "#AF5DED",
+  backImg: "https://www.dazanim.com/img/ban.png",
   theme: Theme.Auto as Theme,
   tightBorder: !!getClientConfig()?.isApp,
   sendPreviewBubble: true,
   enableAutoGenerateTitle: true,
+  autoTitleGeneration: false,
   sidebarWidth: 300,
 
   disablePromptHint: false,
-  useMjImgSelfProxy:false,
+  useMjImgSelfProxy: false,
 
   dontShowMaskSplashScreen: false, // dont show splash screen when create chat
   hideBuiltinMasks: false, // dont add builtin masks
