@@ -282,7 +282,11 @@ const cn = {
       SubTitle: "使用自己的 Key 可绕过密码访问限制",
       Placeholder: "OpenAI API Key",
     },
-
+    HeygenToken: {
+      Title: "Heygen API Key",
+      SubTitle: "可以使用自己的 Heygen api key",
+      Placeholder: "Heygen API Key",
+    },
     Usage: {
       Title: "余额查询",
       SubTitle(used: any, total: any) {

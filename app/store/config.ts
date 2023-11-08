@@ -25,12 +25,12 @@ export enum checkFlag {
   Second = "视频背景",
 }
 export enum voiceCheck {
-  Female = "男声",
-  Male = "女声",
+  Female = "女声",
+  Male = "男声",
 }
 export enum personModel {
-  FemaleModel = "男生",
-  MaleModel = "女生",
+  FemaleModel = "女生",
+  MaleModel = "男生",
 }
 
 export const DEFAULT_CONFIG = {
@@ -41,7 +41,7 @@ export const DEFAULT_CONFIG = {
   voiceCheck: voiceCheck.Female as voiceCheck,
   personModel: personModel.FemaleModel as personModel,
   backColor: "#AF5DED",
-  backImg: "https://www.dazanim.com/img/ban.png",
+  backImg: "https://www.dazanim.com/bg.png",
   theme: Theme.Auto as Theme,
   tightBorder: !!getClientConfig()?.isApp,
   sendPreviewBubble: true,

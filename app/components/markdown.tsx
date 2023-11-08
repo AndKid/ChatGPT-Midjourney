@@ -13,6 +13,7 @@ import LoadingIcon from "../icons/three-dots.svg";
 import React from "react";
 import { useDebouncedCallback, useThrottledCallback } from "use-debounce";
 import { showImageModal } from "./ui-lib";
+import { Spin } from "antd";
 
 export function Mermaid(props: { code: string }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -108,18 +109,17 @@ function _MarkDownContent(props: { content: string }) {
     // Check if it's a video link
     if (/\.(mp4|webm|ogg)$/i.test(href)) {
       return (
-        <video controls>
+        <video controls style={{ maxWidth: "100%" }}>
           <source src={href} type="video/mp4" />
-          Your browser does not support the video tag.
         </video>
       );
     }
 
     // Check if it's a video download link
     if (/\.mp4\?/.test(href)) {
-      const videoUrl = href
+      const videoUrl = href;
       return (
-        <video controls style={{maxWidth:"100%"}}>
+        <video controls style={{ maxWidth: "100%" }}>
           <source src={videoUrl} type="video/mp4" />
           Your browser does not support the video tag.
         </video>

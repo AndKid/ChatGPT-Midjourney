@@ -8,14 +8,14 @@ import { getClientConfig } from "../config/client";
 export interface AccessControlStore {
   accessCode: string;
   token: string;
-
+  heygenToken: string;
   needCode: boolean;
   hideUserApiKey: boolean;
   hideBalanceQuery: boolean;
   disableGPT4: boolean;
 
   openaiUrl: string;
-
+  updateHeygenToken: (_: string) => void;
   updateToken: (_: string) => void;
   updateCode: (_: string) => void;
   enabledAccessControl: () => boolean;
@@ -35,6 +35,7 @@ export const useAccessStore = create<AccessControlStore>()(
   persist(
     (set, get) => ({
       token: "",
+      heygenToken: "",
       accessCode: "",
       needCode: true,
       hideUserApiKey: false,
@@ -53,15 +54,20 @@ export const useAccessStore = create<AccessControlStore>()(
       updateToken(token: string) {
         set(() => ({ token: token?.trim() }));
       },
+      updateHeygenToken(heygenToken: string) {
+        set(() => ({ heygenToken: heygenToken?.trim() }));
+      },
       updateOpenAiUrl(url: string) {
         set(() => ({ openaiUrl: url?.trim() }));
       },
       isAuthorized() {
         get().fetch();
-
         // has token or has code or disabled access control
         return (
-          !!get().token || !!get().accessCode || !get().enabledAccessControl()
+          !!get().token ||
+          !!get().accessCode ||
+          !get().enabledAccessControl() ||
+          !!get().heygenToken
         );
       },
       fetch() {

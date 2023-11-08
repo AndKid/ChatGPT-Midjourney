@@ -283,6 +283,11 @@ const en: LocaleType = {
       SubTitle: "Use your key to ignore access code limit",
       Placeholder: "OpenAI API Key",
     },
+    HeygenToken: {
+      Title: "Heygen API Key",
+      SubTitle: "Use your own Heygen api key",
+      Placeholder: "Heygen API Key",
+    },
     Usage: {
       Title: "Account Balance",
       SubTitle(used: any, total: any) {
