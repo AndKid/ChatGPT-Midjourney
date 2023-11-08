@@ -553,7 +553,6 @@ export const useChatStore = create<ChatStore>()(
             const appConfig = useAppConfig.getState();
             const api = useAccessStore.getState();
             const config = getServerSideConfig();
-            console.log(config);
             // const apiKey =
             //   "NjA0YzgzMDNkZDZlNGMwYjliNzdiNzg3NjRhMTc3OGItMTY5Nzc2NDg3Ng==";
             //   const options = {
@@ -567,99 +566,154 @@ export const useChatStore = create<ChatStore>()(
             //     .catch(err => console.error(err));
             const generateVideo = async () => {
               try {
-                const response = await fetch(
-                  "https://api.heygen.com/v2/video/generate",
-                  {
-                    method: "POST",
-                    headers: {
-                      "X-Api-Key": config.xApiKey || api.heygenToken,
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                      video_inputs: [
-                        {
-                          character: {
-                            type: "avatar",
-                            avatar_id:
-                              appConfig.personModel === personModel.FemaleModel
-                                ? "Angela-inwhiteskirt-20220820"
-                                : "Joon-incasualsuit-20220821",
-                            avatar_style: "normal",
-                            // type: "talking_photo",
-                            // talking_photo_id: "ba9c11684315405aac1dd8ed987fdda2"
-                          },
-                          voice: {
-                            type: "text",
-                            input_text: content.substring(3).trim(),
-                            voice_id:
-                              appConfig.voiceCheck === voiceCheck.Male
-                                ? "961546a1be64458caa1386ff63dd5d5f"
-                                : "8a44173a27984487b3fa86e56004218c",
-                          },
-                          background: {
-                            type:
-                              appConfig.checkFlag === checkFlag.Auto
-                                ? "color"
-                                : appConfig.checkFlag === checkFlag.First
-                                ? "image"
-                                : "video",
-                            value:
-                              appConfig.checkFlag === checkFlag.Auto
-                                ? appConfig.backColor.toString()
-                                : "",
-                            url:
-                              appConfig.checkFlag === checkFlag.First
-                                ? appConfig.backImg
-                                : appConfig.checkFlag === checkFlag.Second
-                                ? "https://www.dazanim.com/hi.mp4"
-                                : "",
-                            play_style:
-                              appConfig.checkFlag === checkFlag.Second
-                                ? "loop"
-                                : "",
-                          },
+                const response = await fetch("/api/generateVideo", {
+                  method: "POST",
+                  body: JSON.stringify({
+                    video_inputs: [
+                      {
+                        character: {
+                          type: "avatar",
+                          avatar_id:
+                            appConfig.personModel === personModel.FemaleModel
+                              ? "Angela-inwhiteskirt-20220820"
+                              : "Joon-incasualsuit-20220821",
+                          avatar_style: "normal",
+                          // type: "talking_photo",
+                          // talking_photo_id: "ba9c11684315405aac1dd8ed987fdda2"
                         },
-                      ],
-                      test: false,
-                      aspect_ratio: "16:9",
-                    }),
-                  },
-                );
-                const data = await response.json();
-                handleError("视频飞速渲染中...");
-                if (data.code === 400664) {
-                  handleError(data.message);
-                } else if (data.error === null) {
-                  const checkVideoStatus = async () => {
-                    const url = `https://api.heygen.com/v1/video_status.get?video_id=${data.data.video_id}`;
-                    const response = await fetch(url, {
-                      method: "GET",
-                      headers: {
-                        "X-Api-Key": process.env.X_Api_Key || api.heygenToken,
+                        voice: {
+                          type: "text",
+                          input_text: content.substring(3).trim(),
+                          voice_id:
+                            appConfig.voiceCheck === voiceCheck.Male
+                              ? "961546a1be64458caa1386ff63dd5d5f"
+                              : "8a44173a27984487b3fa86e56004218c",
+                        },
+                        background: {
+                          type:
+                            appConfig.checkFlag === checkFlag.Auto
+                              ? "color"
+                              : appConfig.checkFlag === checkFlag.First
+                              ? "image"
+                              : "video",
+                          value:
+                            appConfig.checkFlag === checkFlag.Auto
+                              ? appConfig.backColor.toString()
+                              : "",
+                          url:
+                            appConfig.checkFlag === checkFlag.First
+                              ? appConfig.backImg
+                              : appConfig.checkFlag === checkFlag.Second
+                              ? "https://www.dazanim.com/hi.mp4"
+                              : "",
+                          play_style:
+                            appConfig.checkFlag === checkFlag.Second
+                              ? "loop"
+                              : "",
+                        },
                       },
-                    });
-                    const videoData = await response.json();
+                    ],
+                    test: false,
+                    aspect_ratio: "16:9",
+                  }),
+                });
 
-                    if (videoData.code === 100) {
-                      const status = videoData.data.status;
-                      if (status === "processing" || status === "waiting") {
-                        setTimeout(checkVideoStatus, 2000);
-                      } else if (status === "completed") {
-                        handleError(videoData.data.video_url);
-                      } else if (status === "failed") {
-                        handleError("处理失败");
-                      } else {
-                        handleError("未知错误");
-                      }
-                    } else {
-                      handleError(videoData.message);
-                    }
-                  };
+                const data = await response.json();
+                console.log(data);
+                
+                // const response = await fetch(
+                //   "https://api.heygen.com/v2/video/generate",
+                //   {
+                //     method: "POST",
+                //     headers: {
+                //       "X-Api-Key": config.xApiKey || api.heygenToken,
+                //       "Content-Type": "application/json",
+                //     },
+                //     body: JSON.stringify({
+                //       video_inputs: [
+                //         {
+                //           character: {
+                //             type: "avatar",
+                //             avatar_id:
+                //               appConfig.personModel === personModel.FemaleModel
+                //                 ? "Angela-inwhiteskirt-20220820"
+                //                 : "Joon-incasualsuit-20220821",
+                //             avatar_style: "normal",
+                //             // type: "talking_photo",
+                //             // talking_photo_id: "ba9c11684315405aac1dd8ed987fdda2"
+                //           },
+                //           voice: {
+                //             type: "text",
+                //             input_text: content.substring(3).trim(),
+                //             voice_id:
+                //               appConfig.voiceCheck === voiceCheck.Male
+                //                 ? "961546a1be64458caa1386ff63dd5d5f"
+                //                 : "8a44173a27984487b3fa86e56004218c",
+                //           },
+                //           background: {
+                //             type:
+                //               appConfig.checkFlag === checkFlag.Auto
+                //                 ? "color"
+                //                 : appConfig.checkFlag === checkFlag.First
+                //                 ? "image"
+                //                 : "video",
+                //             value:
+                //               appConfig.checkFlag === checkFlag.Auto
+                //                 ? appConfig.backColor.toString()
+                //                 : "",
+                //             url:
+                //               appConfig.checkFlag === checkFlag.First
+                //                 ? appConfig.backImg
+                //                 : appConfig.checkFlag === checkFlag.Second
+                //                 ? "https://www.dazanim.com/hi.mp4"
+                //                 : "",
+                //             play_style:
+                //               appConfig.checkFlag === checkFlag.Second
+                //                 ? "loop"
+                //                 : "",
+                //           },
+                //         },
+                //       ],
+                //       test: false,
+                //       aspect_ratio: "16:9",
+                //     }),
+                //   },
+                // );
+                // const data = await response.json();
+                // handleError("视频飞速渲染中...");
+                // if (data.code === 400664) {
+                //   handleError(data.message);
+                // } else if (data.error === null) {
+                //   const checkVideoStatus = async () => {
+                //     const url = `https://api.heygen.com/v1/video_status.get?video_id=${data.data.video_id}`;
+                //     const response = await fetch(url, {
+                //       method: "GET",
+                //       headers: {
+                //         "X-Api-Key": process.env.X_Api_Key || api.heygenToken,
+                //       },
+                //     });
+                //     const videoData = await response.json();
 
-                  checkVideoStatus();
-                } else {
-                  handleError(data.error.message);
-                }
+                //     if (videoData.code === 100) {
+                //       const status = videoData.data.status;
+                //       if (status === "processing" || status === "waiting") {
+                //         setTimeout(checkVideoStatus, 2000);
+                //       } else if (status === "completed") {
+                //         handleError(videoData.data.video_url);
+                //       } else if (status === "failed") {
+                //         handleError("处理失败");
+                //       } else {
+                //         handleError("未知错误");
+                //       }
+                //     } else {
+                //       handleError(videoData.message);
+                //     }
+                //   };
+
+                //   checkVideoStatus();
+                // } else {
+                //   handleError(data.error.message);
+                // }
               } catch (error) {
                 console.error(error);
               }
