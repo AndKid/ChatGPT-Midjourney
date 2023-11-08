@@ -29,6 +29,8 @@ import { ChatControllerPool } from "../client/controller";
 import { prettyObject } from "../utils/format";
 import { estimateTokenLength } from "../utils/token";
 import { nanoid } from "nanoid";
+import { useAccessStore } from "./access";
+import { getServerSideConfig } from "../config/server";
 
 export type ChatMessage = RequestMessage & {
   date: string;
@@ -549,8 +551,11 @@ export const useChatStore = create<ChatStore>()(
         } else if (content.toLowerCase().startsWith("/hi")) {
           {
             const appConfig = useAppConfig.getState();
-            const apiKey =
-              "NjA0YzgzMDNkZDZlNGMwYjliNzdiNzg3NjRhMTc3OGItMTY5Nzc2NDg3Ng==";
+            const api = useAccessStore.getState();
+            const config = getServerSideConfig();
+            console.log(config);
+            // const apiKey =
+            //   "NjA0YzgzMDNkZDZlNGMwYjliNzdiNzg3NjRhMTc3OGItMTY5Nzc2NDg3Ng==";
             //   const options = {
             //     method: 'GET',
             //     headers: {accept: 'application/json', 'x-api-key': apiKey}
@@ -567,7 +572,7 @@ export const useChatStore = create<ChatStore>()(
                   {
                     method: "POST",
                     headers: {
-                      "X-Api-Key": apiKey,
+                      "X-Api-Key": config.xApiKey || api.heygenToken,
                       "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
@@ -620,20 +625,17 @@ export const useChatStore = create<ChatStore>()(
                     }),
                   },
                 );
-
                 const data = await response.json();
-
+                handleError("视频飞速渲染中...");
                 if (data.code === 400664) {
-                  botMessage.streaming = false;
-                  botMessage.content = data.message;
-                  get().onNewMessage(botMessage);
-                } else {
+                  handleError(data.message);
+                } else if (data.error === null) {
                   const checkVideoStatus = async () => {
                     const url = `https://api.heygen.com/v1/video_status.get?video_id=${data.data.video_id}`;
                     const response = await fetch(url, {
                       method: "GET",
                       headers: {
-                        "X-Api-Key": apiKey,
+                        "X-Api-Key": process.env.X_Api_Key || api.heygenToken,
                       },
                     });
                     const videoData = await response.json();
@@ -643,32 +645,30 @@ export const useChatStore = create<ChatStore>()(
                       if (status === "processing" || status === "waiting") {
                         setTimeout(checkVideoStatus, 2000);
                       } else if (status === "completed") {
-                        botMessage.streaming = false;
-                        botMessage.content = videoData.data.video_url;
-                        get().onNewMessage(botMessage);
+                        handleError(videoData.data.video_url);
                       } else if (status === "failed") {
-                        botMessage.streaming = false;
-                        botMessage.content = "处理失败";
-                        get().onNewMessage(botMessage);
+                        handleError("处理失败");
                       } else {
-                        botMessage.streaming = false;
-                        botMessage.content = "未知错误";
-                        get().onNewMessage(botMessage);
+                        handleError("未知错误");
                       }
                     } else {
-                      botMessage.streaming = false;
-                      botMessage.content = videoData.message;
-                      get().onNewMessage(botMessage);
+                      handleError(videoData.message);
                     }
                   };
 
                   checkVideoStatus();
+                } else {
+                  handleError(data.error.message);
                 }
               } catch (error) {
                 console.error(error);
               }
             };
-
+            const handleError = (data: string) => {
+              botMessage.streaming = false;
+              botMessage.content = data;
+              get().onNewMessage(botMessage);
+            };
             generateVideo();
           }
         } else {

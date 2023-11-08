@@ -654,7 +654,7 @@ export function Settings() {
                   updateConfig((config) => (config.backImg = e.target.value));
                 }}
               >
-                <Radio value={"https://www.dazanim.com/img/ban.png"}>
+                <Radio value={"https://www.dazanim.com/bg.png"}>
                   背景一{" "}
                 </Radio>
                 <Radio
@@ -682,7 +682,7 @@ export function Settings() {
 
           {config.checkFlag === checkFlag.First ? (
             <ListItem title={Locale.Settings.Backimg.BackimgTitle}>
-              {config.backImg === "https://www.dazanim.com/img/ban.png" ? (
+              {config.backImg === "https://www.dazanim.com/bg.png" ? (
                 <Image
                   width={100}
                   height={50}
@@ -712,6 +712,19 @@ export function Settings() {
               }
             ></input>
           </ListItem> */}
+            <ListItem
+                title={Locale.Settings.HeygenToken.Title}
+                subTitle={Locale.Settings.HeygenToken.SubTitle}
+              >
+                <PasswordInput
+                  value={accessStore.heygenToken}
+                  type="text"
+                  placeholder={Locale.Settings.HeygenToken.Placeholder}
+                  onChange={(e) => {
+                    accessStore.updateHeygenToken(e.currentTarget.value);
+                  }}
+                />
+              </ListItem>
         </List>
         <List>
           <ListItem

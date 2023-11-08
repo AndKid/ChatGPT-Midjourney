@@ -13,11 +13,14 @@ declare global {
       BUILD_MODE?: "standalone" | "export";
       BUILD_APP?: string; // is building desktop app
       HIDE_BALANCE_QUERY?: string; // allow user to query balance or not
+      X_Api_Key?:string;
     }
   }
 }
 
 const ACCESS_CODES = (function getAccessCodes(): Set<string> {
+  console.log(process.env.CODE);
+  
   const code = process.env.CODE;
 
   try {
@@ -36,8 +39,9 @@ export const getServerSideConfig = () => {
       "[Server Config] you are importing a nodejs-only module outside of nodejs",
     );
   }
-
+ 
   return {
+    xApiKey: process.env.X_Api_Key,
     apiKey: process.env.OPENAI_API_KEY,
     code: process.env.CODE,
     codes: ACCESS_CODES,
