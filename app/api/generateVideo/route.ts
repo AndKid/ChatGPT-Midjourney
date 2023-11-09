@@ -1,12 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import bodyParser from "body-parser";
 import fetch from "node-fetch";
-
-// 使用 body-parser 中间件
-export const middleware = bodyParser.json();
 
 async function handle(req: NextRequest) {
   try {
+    let data = await req.json();
     const API_KEY =
       "OWUxZDEwNzgxMTc4NDMxMThmZmRlMDQ1Y2FjNjkxNjMtMTY5OTI1MzA0OA==";
     const API_URL = "https://api.heygen.com/v2/video/generate";
@@ -16,10 +13,10 @@ async function handle(req: NextRequest) {
         "Content-Type": "application/json",
         "X-Api-Key": API_KEY,
       },
-      body: JSON.stringify(req.body),
+      body: data,
     });
-    const data = await response.json();
-    return NextResponse.json(data, { status: 200 });
+    const res = await response.json();
+    return NextResponse.json(res, { status: 200 });
   } catch (error: any) {
     console.error(error);
     return NextResponse.json(
