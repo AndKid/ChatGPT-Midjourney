@@ -86,7 +86,6 @@ import { getClientConfig } from "../config/client";
 const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {
   loading: () => <LoadingIcon />,
 });
-
 export function SessionConfigModel(props: { onClose: () => void }) {
   const chatStore = useChatStore();
   const session = chatStore.currentSession();
@@ -636,6 +635,7 @@ export function EditMessageModal(props: { onClose: () => void }) {
   );
 }
 
+
 function _Chat() {
   type RenderMessage = ChatMessage & { preview?: boolean };
 
@@ -1082,79 +1082,7 @@ function _Chat() {
 
   // edit / insert message modal
   const [isEditingMessage, setIsEditingMessage] = useState(false);
-  const getVIdeo = () => {
-    fetch("https://api.heygen.com/v1/video.generate", {
-      method: "POST",
-      headers: {
-        "X-Api-Key":
-          "YWI0MDAyM2I1ODI3NDY0MWExODExYTY0ZWY5MmNlYjQtMTY5ODk5ODM1NQ==",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        background: "#ffffff",
-        clips: [
-          {
-            avatar_id: "Daisy-inskirt-20220818",
-            avatar_style: "normal",
-            input_text: "Welcome to HeyGen API",
-            offset: {
-              x: 0,
-              y: 0,
-            },
-            scale: 1,
-            voice_id: "1bd001e7e50f421d891986aad5158bc8",
-          },
-        ],
-        ratio: "16:9",
-        test: true,
-        version: "v1alpha",
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // 处理返回的数据
-        getVideoUrl(data.data.video_id);
-        console.log(data.data.video_id);
-      })
-      .catch((error) => {
-        // 处理错误
-        console.error(error);
-      });
-  };
-  const getVideoUrl = (id: any) => {
-    const videoId = id;
-    const apiKey =
-      "YWI0MDAyM2I1ODI3NDY0MWExODExYTY0ZWY5MmNlYjQtMTY5ODk5ODM1NQ==";
 
-    function checkVideoStatus() {
-      const url = `https://api.heygen.com/v1/video_status.get?video_id=${videoId}`;
-
-      fetch(url, {
-        method: "GET",
-        headers: {
-          "X-Api-Key": apiKey,
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          const status = data.data.status;
-          console.log(`返回: ${status}`);
-          if (status === "processing") {
-            // 如果状态为 "processing"，继续发送请求
-            setTimeout(checkVideoStatus, 1000); // 延迟 1 秒后再次发送请求
-          } else {
-            // 处理其他状态
-            console.log("Video processing completed.");
-          }
-        })
-        .catch((error) => {
-          // 处理错误
-          console.error(error);
-        });
-    }
-
-    checkVideoStatus();
-  };
   return (
     <div className={styles.chat} key={session.id}>
       <div className="window-header" data-tauri-drag-region>
@@ -1480,13 +1408,6 @@ function _Chat() {
             type="primary"
             onClick={() => doSubmit(userInput)}
           />
-          {/* <IconButton
-            icon={<SendWhiteIcon />}
-            text={Locale.Chat.Send}
-            className={styles["chat-input-send"]}
-            type="primary"
-            onClick={() => getVIdeo(userInput)}
-          /> */}
         </div>
       </div>
 
@@ -1504,7 +1425,6 @@ function _Chat() {
     </div>
   );
 }
-
 export function Chat() {
   const chatStore = useChatStore();
   const sessionIndex = chatStore.currentSessionIndex;
