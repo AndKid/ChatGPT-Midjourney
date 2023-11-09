@@ -553,7 +553,6 @@ export const useChatStore = create<ChatStore>()(
           {
             const appConfig = useAppConfig.getState();
             const api = useAccessStore.getState();
-            const config = getServerSideConfig();
             // const apiKey =
             //   "NjA0YzgzMDNkZDZlNGMwYjliNzdiNzg3NjRhMTc3OGItMTY5Nzc2NDg3Ng==";
             //   const options = {
@@ -616,26 +615,27 @@ export const useChatStore = create<ChatStore>()(
                     ],
                     test: false,
                     aspect_ratio: "16:9",
+                    token:api.heygenToken
                   }),
                 });
-
                 const res = await response.json();
-
-                // if (res.error === null) {
-
-                const videoData = await fetch(`/api/videoStatus`, {
-                  method: "POST",
-                  body: JSON.stringify({
-                    video_id: res.data.video_id,
-                  }),
-                });
-                const data = await videoData.json();
-                if (data.data.status === "completed") {
-                  handleError(data.data.video_url);
+                if (res.error === null) {
+                  const videoData = await fetch(`/api/videoStatus`, {
+                    method: "POST",
+                    body: JSON.stringify({
+                      video_id: res.data.video_id,
+                      token:api.heygenToken
+                    }),
+                  });
+                  const data = await videoData.json();
+                  if (data.data.status === "completed") {
+                    handleError(data.data.video_url);
+                  } else {
+                    handleError("处理失败");
+                  }
                 } else {
-                  handleError("处理失败");
+                  handleError(res.error.message);
                 }
-
                 // }
                 // const response = await fetch(
                 //   "https://api.heygen.com/v2/video/generate",

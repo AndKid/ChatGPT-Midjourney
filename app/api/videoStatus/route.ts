@@ -5,23 +5,20 @@ async function handle(req: NextRequest) {
   try {
     let data = await req.json();
     const videoId = data.video_id;
-    const apiKey =
-      process.env.X_Api_Key ||
-      "NjczMGNlODk0MjE4NGIzN2I2NmQyNDEzMjk0MTg3MmYtMTY5ODk5NjM0Mg==";
+    const apiKey = process.env.X_Api_Key;
     const url = `https://api.heygen.com/v1/video_status.get?video_id=${videoId}`;
 
     while (true) {
       const response = await fetch(url, {
         method: "GET",
         headers: {
-          "X-Api-Key": apiKey,
+          "X-Api-Key": data.token === "" ? apiKey : data.token,
         },
       });
       const videoData: any = await response.json();
       const status = videoData.data.status;
 
       if (status === "processing" || status === "waiting") {
-        // 继续等待，延迟一段时间后再次发起请求
         await new Promise((resolve) => setTimeout(resolve, 2000)); // 延迟2秒钟
       } else if (status === "completed") {
         return NextResponse.json(videoData, { status: 200 });
