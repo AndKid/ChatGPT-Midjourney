@@ -13,7 +13,9 @@ async function handle(req: NextRequest) {
         "Content-Type": "application/json",
         "X-Api-Key": API_KEY,
       },
-      body: data,
+      body: JSON.stringify({
+        data,
+      }),
     });
     const res = await response.json();
     return NextResponse.json(res, { status: 200 });
