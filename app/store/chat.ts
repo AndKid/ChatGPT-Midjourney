@@ -630,7 +630,11 @@ export const useChatStore = create<ChatStore>()(
                   }),
                 });
                 const data = await videoData.json();
-                console.log(data);
+                if (data.data.status === "completed") {
+                  handleError(data.data.video_url);
+                } else {
+                  handleError("处理失败");
+                }
 
                 // }
                 // const response = await fetch(
