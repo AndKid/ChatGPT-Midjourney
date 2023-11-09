@@ -620,8 +620,19 @@ export const useChatStore = create<ChatStore>()(
                 });
 
                 const res = await response.json();
-                console.log(res);
 
+                // if (res.error === null) {
+
+                const videoData = await fetch(`/api/videoStatus`, {
+                  method: "POST",
+                  body: JSON.stringify({
+                    video_id: res.data.video_id,
+                  }),
+                });
+                const data = await videoData.json();
+                console.log(data);
+
+                // }
                 // const response = await fetch(
                 //   "https://api.heygen.com/v2/video/generate",
                 //   {
