@@ -619,8 +619,8 @@ export const useChatStore = create<ChatStore>()(
                   }),
                 });
 
-                const data = await response.json();
-                console.log(data);
+                const res = await response.json();
+                console.log(res);
 
                 // const response = await fetch(
                 //   "https://api.heygen.com/v2/video/generate",
