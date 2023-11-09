@@ -2,12 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import fetch from "node-fetch";
 async function handle(req: NextRequest) {
   try {
-    const API_KEY =
-      process.env.X_Api_Key ||
-      "NjA0YzgzMDNkZDZlNGMwYjliNzdiNzg3NjRhMTc3OGItMTY5Nzc2NDg3Ng=="; // Use a default API key if the environment variable is not set
+    const API_KEY = "NjA0YzgzMDNkZDZlNGMwYjliNzdiNzg3NjRhMTc3OGItMTY5Nzc2NDg3Ng==";
     const API_URL = "https://api.heygen.com/v2/video/generate";
     console.log("--------");
-
     const response = await fetch(API_URL, {
       method: "POST",
       headers: {
@@ -15,10 +12,8 @@ async function handle(req: NextRequest) {
         "X-Api-Key": API_KEY,
       },
     });
-
     const data = await response.json();
     console.log(data);
-
     return NextResponse.json(
       { code: 1, status: "SUCCESS", msg: "操作成功" },
       { status: 200 },
