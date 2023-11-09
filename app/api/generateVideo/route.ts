@@ -7,7 +7,7 @@ async function handle(req: NextRequest) {
 
     try {
       const response = await fetch(API_URL, {
-        method: "GET",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           "X-Api-Key": API_KEY || "NjA0YzgzMDNkZDZlNGMwYjliNzdiNzg3NjRhMTc3OGItMTY5Nzc2NDg3Ng==",
