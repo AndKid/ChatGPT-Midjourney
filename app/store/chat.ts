@@ -391,6 +391,7 @@ export const useChatStore = create<ChatStore>()(
         }, 3000);
       },
       //发放请求
+
       async onUserInput(content, extAttr?: any) {
         const session = get().currentSession();
         const modelConfig = session.mask.modelConfig;
@@ -620,7 +621,7 @@ export const useChatStore = create<ChatStore>()(
 
                 const data = await response.json();
                 console.log(data);
-                
+
                 // const response = await fetch(
                 //   "https://api.heygen.com/v2/video/generate",
                 //   {
