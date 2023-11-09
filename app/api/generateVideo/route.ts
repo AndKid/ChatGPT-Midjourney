@@ -18,7 +18,6 @@ async function handle(req: NextRequest) {
             character: {
               type: "avatar",
               avatar_id: "Angela-inwhiteskirt-20220820",
-
               avatar_style: "normal",
               // type: "talking_photo",
               // talking_photo_id: "ba9c11684315405aac1dd8ed987fdda2"
@@ -40,10 +39,7 @@ async function handle(req: NextRequest) {
     });
     const data = await response.json();
     console.log(data);
-    return NextResponse.json(
-      { code: 1, status: "SUCCESS", msg: "操作成功" },
-      { status: 200 },
-    );
+    return data
   } catch (error: any) {
     console.error(error);
     return NextResponse.json(
