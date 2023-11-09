@@ -16,7 +16,7 @@ async function handle(req: NextRequest) {
         "Content-Type": "application/json",
         "X-Api-Key":
           API_KEY ||
-          "OWUxZDEwNzgxMTc4NDMxMThmZmRlMDQ1Y2FjNjkxNjMtMTY5OTI1MzA0OA==",
+          "NjczMGNlODk0MjE4NGIzN2I2NmQyNDEzMjk0MTg3MmYtMTY5ODk5NjM0Mg==",
       },
       body: JSON.stringify({
         video_inputs: JSON.parse(resRuest).data.video_inputs,

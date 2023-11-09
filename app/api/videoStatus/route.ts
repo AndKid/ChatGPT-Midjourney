@@ -7,7 +7,7 @@ async function handle(req: NextRequest) {
     const videoId = data.video_id;
     const apiKey =
       process.env.X_Api_Key ||
-      "OWUxZDEwNzgxMTc4NDMxMThmZmRlMDQ1Y2FjNjkxNjMtMTY5OTI1MzA0OA==";
+      "NjczMGNlODk0MjE4NGIzN2I2NmQyNDEzMjk0MTg3MmYtMTY5ODk5NjM0Mg==";
     const url = `https://api.heygen.com/v1/video_status.get?video_id=${videoId}`;
 
     while (true) {
