@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import bodyParser from "body-parser";
 import fetch from "node-fetch";
+
+// 使用 body-parser 中间件
+export const middleware = bodyParser.json();
+
 async function handle(req: NextRequest) {
   try {
     const API_KEY =
