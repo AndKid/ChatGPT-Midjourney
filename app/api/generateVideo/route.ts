@@ -25,7 +25,10 @@ async function handle(req: NextRequest) {
       }),
     });
     const res: any = await response.json();
-    if (res.data === null) {
+    console.log(res);
+    if (res.error === null) {
+      return NextResponse.json(res, { status: 200 });
+    } else {
       return NextResponse.json(
         {
           data: null,
@@ -35,8 +38,6 @@ async function handle(req: NextRequest) {
         },
         { status: 200 },
       );
-    } else {
-      return NextResponse.json(res, { status: 200 });
     }
   } catch (error: any) {
     console.error(error);
