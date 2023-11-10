@@ -7,7 +7,6 @@ async function handle(req: NextRequest) {
     const videoId = data.video_id;
     const apiKey = process.env.X_Api_Key;
     const url = `https://api.heygen.com/v1/video_status.get?video_id=${videoId}`;
-
     while (true) {
       const response = await fetch(url, {
         method: "GET",
