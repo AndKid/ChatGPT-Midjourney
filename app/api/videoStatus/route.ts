@@ -7,7 +7,9 @@ async function handle(req: NextRequest) {
     const videoId = data.video_id;
     const apiKey = process.env.X_Api_Key;
     const url = `https://api.heygen.com/v1/video_status.get?video_id=${videoId}`;
-    while (true) {
+
+    let status = "";
+    while (status !== "failed" && status !== "completed") {
       const response = await fetch(url, {
         method: "GET",
         headers: {
@@ -15,9 +17,10 @@ async function handle(req: NextRequest) {
         },
       });
       const videoData: any = await response.json();
-      const status = videoData.data.status;
+      status = videoData.data.status;
+
       if (status === "processing" || status === "waiting") {
-        await new Promise((resolve) => setTimeout(resolve, 2000)); 
+        await new Promise((resolve) => setTimeout(resolve, 2000));
       } else if (status === "completed") {
         return NextResponse.json(videoData, { status: 200 });
       } else if (status === "failed") {
@@ -25,19 +28,12 @@ async function handle(req: NextRequest) {
           {
             code: 1,
             status: "FAIL",
-            message: "请求失败,请稍后再次尝试",
+            message: "视频生成失败，请稍后再次尝试",
           },
           { status: 200 },
         );
       } else {
-        return NextResponse.json(
-          {
-            code: 1,
-            status: "FAIL",
-            message: "请求失败,请稍后再次尝试",
-          },
-          { status: 200 },
-        );
+        return NextResponse.json(videoData, { status: 200 });
       }
     }
   } catch (error: any) {
