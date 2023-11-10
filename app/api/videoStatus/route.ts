@@ -16,9 +16,8 @@ async function handle(req: NextRequest) {
       });
       const videoData: any = await response.json();
       const status = videoData.data.status;
-
       if (status === "processing" || status === "waiting") {
-        await new Promise((resolve) => setTimeout(resolve, 2000)); // 延迟2秒钟
+        await new Promise((resolve) => setTimeout(resolve, 2000)); 
       } else if (status === "completed") {
         return NextResponse.json(videoData, { status: 200 });
       } else if (status === "failed") {
@@ -26,7 +25,7 @@ async function handle(req: NextRequest) {
           {
             code: 1,
             status: "FAIL",
-            msg: "请求失败",
+            message: "请求失败,请稍后再次尝试",
           },
           { status: 200 },
         );
@@ -35,7 +34,7 @@ async function handle(req: NextRequest) {
           {
             code: 1,
             status: "FAIL",
-            msg: "请求失败",
+            message: "请求失败,请稍后再次尝试",
           },
           { status: 200 },
         );
@@ -47,7 +46,7 @@ async function handle(req: NextRequest) {
       {
         code: 1,
         status: "FAIL",
-        msg: error.message || "未知错误，请查看服务端日志",
+        message: error.message || "未知错误，请查看服务端日志",
       },
       { status: 200 },
     );

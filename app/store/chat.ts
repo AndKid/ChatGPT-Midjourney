@@ -622,13 +622,13 @@ export const useChatStore = create<ChatStore>()(
                   if (data.data.status === "completed") {
                     handleError(data.data.video_url);
                   } else {
-                    handleError("处理失败");
+                    handleError(data.message);
                   }
                 } else {
-                  handleError(res.error.msg);
+                  handleError(res.error.message);
                 }
               } catch (error) {
-                console.error(error);
+                handleError("未知错误");
               }
             };
             const handleError = (data: string) => {
