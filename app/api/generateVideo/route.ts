@@ -24,15 +24,28 @@ async function handle(req: NextRequest) {
         aspect_ratio: JSON.parse(resRuest).data.aspect_ratio,
       }),
     });
-    const res = await response.json();
-    return NextResponse.json(res, { status: 200 });
+    const res: any = await response.json();
+    if (res.data === null) {
+      return NextResponse.json(
+        {
+          data: null,
+          error: {
+            message: "请检查当前会话是否有权限，如有问题请联系管理员",
+          },
+        },
+        { status: 200 },
+      );
+    } else {
+      return NextResponse.json(res, { status: 200 });
+    }
   } catch (error: any) {
     console.error(error);
     return NextResponse.json(
       {
-        code: 1,
-        status: "FAIL",
-        msg: error.message || "未知错误，请查看服务端日志",
+        data: null,
+        error: {
+          message: "服务暂不可用",
+        },
       },
       { status: 200 },
     );
