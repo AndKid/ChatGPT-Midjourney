@@ -608,7 +608,7 @@ export const useChatStore = create<ChatStore>()(
                   test: false,
                   aspect_ratio: "16:9",
                   token: api.heygenToken,
-                  caption_open: appConfig.autoTitleGeneration,
+                  // caption: appConfig.autoTitleGeneration,
                 }),
               });
               const res = await response.json();
