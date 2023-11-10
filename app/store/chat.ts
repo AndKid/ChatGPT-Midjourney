@@ -608,7 +608,6 @@ export const useChatStore = create<ChatStore>()(
                   }),
                 });
                 const res = await response.json();
-                console.log(res);
                 if (res.error === null) {
                   const videoData = await fetch(`/api/videoStatus`, {
                     method: "POST",
@@ -620,14 +619,16 @@ export const useChatStore = create<ChatStore>()(
                   const data = await videoData.json();
                   if (data.data.status === "completed") {
                     handleError(data.data.video_url);
-                  } else {
+                  } else if(data.data.status === "failed") {
+                    handleError(data.data.error.message);
+                  }else{
                     handleError(data.message);
                   }
                 } else {
                   handleError(res.error.message);
                 }
               } catch (error) {
-                handleError("服务器返回错误！");
+                handleError("服务器返回错误！稍后再试");
               }
             };
             const handleError = (data: string) => {

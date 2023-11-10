@@ -5,7 +5,7 @@ async function handle(req: NextRequest) {
   try {
     let data = await req.json();
     const videoId = data.video_id;
-    const apiKey = process.env.X_Api_Key;
+    const apiKey = process.env.HEYGEN_API_KEY;
     const url = `https://api.heygen.com/v1/video_status.get?video_id=${videoId}`;
 
     let status = "";
@@ -24,16 +24,16 @@ async function handle(req: NextRequest) {
       } else if (status === "completed") {
         return NextResponse.json(videoData, { status: 200 });
       } else if (status === "failed") {
+        return NextResponse.json(videoData, { status: 200 });
+      } else {
         return NextResponse.json(
           {
             code: 1,
             status: "FAIL",
-            message: "视频生成失败，请稍后再次尝试",
+            message: "未知错误，请稍后再次尝试",
           },
           { status: 200 },
         );
-      } else {
-        return NextResponse.json(videoData, { status: 200 });
       }
     }
   } catch (error: any) {

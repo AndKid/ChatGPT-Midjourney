@@ -7,7 +7,7 @@ async function handle(req: NextRequest) {
     let resRuest = JSON.stringify({
       data,
     });
-    const API_KEY = process.env.X_Api_Key;
+    const API_KEY = process.env.HEYGEN_API_KEY;
     const API_URL = "https://api.heygen.com/v2/video/generate";
     const response = await fetch(API_URL, {
       method: "POST",
