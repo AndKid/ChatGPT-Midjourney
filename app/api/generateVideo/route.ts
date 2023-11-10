@@ -24,21 +24,20 @@ async function handle(req: NextRequest) {
         aspect_ratio: JSON.parse(resRuest).data.aspect_ratio,
       }),
     });
-    const res: any = await response.json();
-    console.log(res);
-    if (res.error === null) {
-      return NextResponse.json(res, { status: 200 });
-    } else {
-      return NextResponse.json(
-        {
-          data: null,
-          error: {
-            message: "请检查当前会话是否有权限，如有问题请联系管理员",
-          },
-        },
-        { status: 200 },
-      );
-    }
+    const res = await response.json();
+
+    return NextResponse.json(res, { status: 200 });
+    // } else {
+    //   return NextResponse.json(
+    //     {
+    //       data: null,
+    //       error: {
+    //         message: "请检查当前会话是否有权限，如有问题请联系管理员",
+    //       },
+    //     },
+    //     { status: 200 },
+    //   );
+    // }
   } catch (error: any) {
     console.error(error);
     return NextResponse.json(
