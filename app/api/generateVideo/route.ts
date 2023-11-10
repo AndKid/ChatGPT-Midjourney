@@ -22,7 +22,7 @@ async function handle(req: NextRequest) {
         video_inputs: JSON.parse(resRuest).data.video_inputs,
         test: JSON.parse(resRuest).data.test,
         aspect_ratio: JSON.parse(resRuest).data.aspect_ratio,
-        caption_open: JSON.parse(resRuest).data.caption_open,
+        caption: JSON.parse(resRuest).data.caption_open,
       }),
     });
     const res = await response.json();
