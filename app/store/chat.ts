@@ -553,62 +553,68 @@ export const useChatStore = create<ChatStore>()(
             const appConfig = useAppConfig.getState();
             const api = useAccessStore.getState();
             const generateVideo = async () => {
-              try {
-                // handleError("视频飞速渲染中...");
-                const response = await fetch("/api/generateVideo", {
-                  method: "POST",
-                  body: JSON.stringify({
-                    video_inputs: [
-                      {
-                        character: {
-                          type: "avatar",
-                          avatar_id:
-                            appConfig.personModel === personModel.FemaleModel
-                              ? "Angela-inwhiteskirt-20220820"
-                              : "Joon-incasualsuit-20220821",
-                          avatar_style: "normal",
-                          // type: "talking_photo",
-                          // talking_photo_id: "ba9c11684315405aac1dd8ed987fdda2"
-                        },
-                        voice: {
-                          type: "text",
-                          input_text: content.substring(3).trim(),
-                          voice_id:
-                            appConfig.voiceCheck === voiceCheck.Male
-                              ? "961546a1be64458caa1386ff63dd5d5f"
-                              : "8a44173a27984487b3fa86e56004218c",
-                        },
-                        background: {
-                          type:
-                            appConfig.checkFlag === checkFlag.Auto
-                              ? "color"
-                              : appConfig.checkFlag === checkFlag.First
-                              ? "image"
-                              : "video",
-                          value:
-                            appConfig.checkFlag === checkFlag.Auto
-                              ? appConfig.backColor.toString()
-                              : "",
-                          url:
-                            appConfig.checkFlag === checkFlag.First
-                              ? appConfig.backImg
-                              : appConfig.checkFlag === checkFlag.Second
-                              ? "https://www.dazanim.com/hi.mp4"
-                              : "",
-                          play_style:
-                            appConfig.checkFlag === checkFlag.Second
-                              ? "loop"
-                              : "",
-                        },
+              // try {
+              // handleError("视频飞速渲染中...");
+              const response = await fetch("/api/generateVideo", {
+                method: "POST",
+                body: JSON.stringify({
+                  video_inputs: [
+                    {
+                      character: {
+                        type: "avatar",
+                        avatar_id:
+                          appConfig.personModel === personModel.FemaleModel
+                            ? "Angela-inwhiteskirt-20220820"
+                            : "Joon-incasualsuit-20220821",
+                        avatar_style: "normal",
+                        // type: "talking_photo",
+                        // talking_photo_id: "ba9c11684315405aac1dd8ed987fdda2"
                       },
-                    ],
-                    test: false,
-                    aspect_ratio: "16:9",
-                    token: api.heygenToken,
-                  }),
-                });
-                const res = await response.json();
-                if (res.error === null) {
+                      voice: {
+                        type: "text",
+                        input_text: content.substring(3).trim(),
+                        voice_id:
+                          appConfig.voiceCheck === voiceCheck.Male
+                            ? "961546a1be64458caa1386ff63dd5d5f"
+                            : "8a44173a27984487b3fa86e56004218c",
+                      },
+                      background: {
+                        type:
+                          appConfig.checkFlag === checkFlag.Auto
+                            ? "color"
+                            : appConfig.checkFlag === checkFlag.First
+                            ? "image"
+                            : "video",
+                        value:
+                          appConfig.checkFlag === checkFlag.Auto
+                            ? appConfig.backColor.toString()
+                            : "",
+                        url:
+                          appConfig.checkFlag === checkFlag.First
+                            ? appConfig.backImg
+                            : appConfig.checkFlag === checkFlag.Second
+                            ? "https://www.dazanim.com/hi.mp4"
+                            : "",
+                        play_style:
+                          appConfig.checkFlag === checkFlag.Second
+                            ? "loop"
+                            : "",
+                      },
+                    },
+                  ],
+                  test: false,
+                  aspect_ratio: "16:9",
+                  token: api.heygenToken,
+                }),
+              });
+              const res = await response.json();
+              const handleError = (data: string) => {
+                botMessage.streaming = false;
+                botMessage.content = data;
+                get().onNewMessage(botMessage);
+              };
+              if (res.error === null) {
+                async function checkVideoStatus() {
                   const videoData = await fetch(`/api/videoStatus`, {
                     method: "POST",
                     body: JSON.stringify({
@@ -617,25 +623,29 @@ export const useChatStore = create<ChatStore>()(
                     }),
                   });
                   const data = await videoData.json();
-                  if (data.data.status === "completed") {
-                    handleError(data.data.video_url);
-                  } else if(data.data.status === "failed") {
+                  const status = data.data.status;
+                
+                  if (status !== "failed") {
+                    if (status === "processing" || status === "waiting") {
+                      setTimeout(checkVideoStatus, 2000);
+                    } else if (status === "completed") {
+                      handleError(data.data.video_url);
+                    }
+                  } else {
                     handleError(data.data.error.message);
-                  }else{
-                    handleError(data.message);
                   }
-                } else {
-                  handleError(res.error.message);
                 }
-              } catch (error) {
-                handleError("服务器返回错误！稍后再试");
+                
+                // 第一次调用
+                checkVideoStatus();
+              } else {
+                handleError(res.error.message);
               }
+              // } catch (error) {
+              //   handleError("服务器返回错误！稍后再试");
+              // }
             };
-            const handleError = (data: string) => {
-              botMessage.streaming = false;
-              botMessage.content = data;
-              get().onNewMessage(botMessage);
-            };
+
             generateVideo();
           }
         } else {
