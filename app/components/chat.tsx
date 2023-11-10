@@ -635,7 +635,6 @@ export function EditMessageModal(props: { onClose: () => void }) {
   );
 }
 
-
 function _Chat() {
   type RenderMessage = ChatMessage & { preview?: boolean };
 
@@ -662,8 +661,12 @@ function _Chat() {
   const [promptHints, setPromptHints] = useState<RenderPompt[]>([]);
   const onSearch = useDebouncedCallback(
     (text: string) => {
-      const matchedPrompts = promptStore.search(text);
-      setPromptHints(matchedPrompts);
+      if (userInput.substring(0, 2) === "/h") {
+        setPromptHints([]);
+      } else {
+        const matchedPrompts = promptStore.search(text);
+        setPromptHints(matchedPrompts);
+      }
     },
     100,
     { leading: true, trailing: true },
@@ -706,8 +709,6 @@ function _Chat() {
   const SEARCH_TEXT_LIMIT = 30;
 
   const onInput = (text: string) => {
-    console.log("-----准备输入");
-    console.log(text);
     setUserInput(text);
     const n = text.trim().length;
     if (n === 0) {
