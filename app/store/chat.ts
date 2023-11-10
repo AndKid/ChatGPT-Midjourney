@@ -548,13 +548,16 @@ export const useChatStore = create<ChatStore>()(
           get().onNewMessage(botMessage);
           set(() => ({}));
           extAttr?.setAutoScroll(true);
-        } else if (content.toLowerCase().startsWith("/hi")) {
+        } else if (
+          content
+            .toLowerCase()
+            .startsWith("/hi" || content.toLowerCase().startsWith("/Hi"))
+        ) {
           {
             const appConfig = useAppConfig.getState();
             const api = useAccessStore.getState();
+
             const generateVideo = async () => {
-              // try {
-              // handleError("视频飞速渲染中...");
               const response = await fetch("/api/generateVideo", {
                 method: "POST",
                 body: JSON.stringify({
@@ -605,6 +608,7 @@ export const useChatStore = create<ChatStore>()(
                   test: false,
                   aspect_ratio: "16:9",
                   token: api.heygenToken,
+                  caption_open: appConfig.autoTitleGeneration,
                 }),
               });
               const res = await response.json();
@@ -615,35 +619,36 @@ export const useChatStore = create<ChatStore>()(
               };
               if (res.error === null) {
                 async function checkVideoStatus() {
-                  const videoData = await fetch(`/api/videoStatus`, {
+                  const response = await fetch(`/api/videoStatus`, {
                     method: "POST",
                     body: JSON.stringify({
                       video_id: res.data.video_id,
                       token: api.heygenToken,
                     }),
                   });
-                  const data = await videoData.json();
-                  const status = data.data.status;
-                
+                  const data = await response.json();
+                  const { status, video_url_caption, video_url, error } =
+                    data.data;
+
                   if (status !== "failed") {
                     if (status === "processing" || status === "waiting") {
                       setTimeout(checkVideoStatus, 2000);
                     } else if (status === "completed") {
-                      handleError(data.data.video_url);
+                      const url =
+                        video_url_caption === null
+                          ? video_url
+                          : video_url_caption;
+                      handleError(url);
                     }
                   } else {
-                    handleError(data.data.error.message);
+                    handleError(error.message);
                   }
                 }
-                
-                // 第一次调用
+
                 checkVideoStatus();
               } else {
                 handleError(res.error.message);
               }
-              // } catch (error) {
-              //   handleError("服务器返回错误！稍后再试");
-              // }
             };
 
             generateVideo();
