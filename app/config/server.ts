@@ -13,7 +13,7 @@ declare global {
       BUILD_MODE?: "standalone" | "export";
       BUILD_APP?: string; // is building desktop app
       HIDE_BALANCE_QUERY?: string; // allow user to query balance or not
-      X_Api_Key?: string;
+      HEYGEN_API_KEY?: string;
     }
   }
 }
@@ -39,7 +39,7 @@ export const getServerSideConfig = () => {
   }
 
   return {
-    xApiKey: process.env.X_Api_Key,
+    xApiKey: process.env.HEYGEN_API_KEY,
     apiKey: process.env.OPENAI_API_KEY,
     code: process.env.CODE,
     codes: ACCESS_CODES,
