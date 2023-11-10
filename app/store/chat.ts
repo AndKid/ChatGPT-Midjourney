@@ -618,7 +618,6 @@ export const useChatStore = create<ChatStore>()(
                     }),
                   });
                   const data = await videoData.json();
-                  console.log(data);
                   if (data.data.status === "completed") {
                     handleError(data.data.video_url);
                   } else {
@@ -628,7 +627,7 @@ export const useChatStore = create<ChatStore>()(
                   handleError(res.error.message);
                 }
               } catch (error) {
-                handleError("未知错误");
+                handleError("服务器返回错误！");
               }
             };
             const handleError = (data: string) => {

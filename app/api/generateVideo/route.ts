@@ -26,7 +26,7 @@ async function handle(req: NextRequest) {
     });
     const res = await response.json();
 
-    return NextResponse.json(res, { status: 200 });
+      return NextResponse.json(res, { status: 200 });
     // } else {
     //   return NextResponse.json(
     //     {
