@@ -239,7 +239,7 @@ const cn = {
     },
     AutoTitleGeneration: {
       Title: "是否生成字幕",
-      SubTitle: "根据对话内容生成视频字幕",
+      SubTitle: "根据输入内容生成视频字幕",
     },
     Mask: {
       Splash: {
