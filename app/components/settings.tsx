@@ -697,7 +697,7 @@ export function Settings() {
               )}
             </ListItem>
           ) : null}
-          <ListItem
+          {/* <ListItem
             title={Locale.Settings.AutoTitleGeneration.Title}
             subTitle={Locale.Settings.AutoTitleGeneration.SubTitle}
           >
@@ -711,7 +711,7 @@ export function Settings() {
                 )
               }
             ></input>
-          </ListItem>
+          </ListItem> */}
             <ListItem
                 title={Locale.Settings.HeygenToken.Title}
                 subTitle={Locale.Settings.HeygenToken.SubTitle}
