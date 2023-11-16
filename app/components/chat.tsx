@@ -661,7 +661,12 @@ function _Chat() {
   const [promptHints, setPromptHints] = useState<RenderPompt[]>([]);
   const onSearch = useDebouncedCallback(
     (text: string) => {
-      if (userInput.substring(0, 2) === "/h"||userInput.substring(0, 2) === "/H") {
+      if (
+        userInput.substring(0, 2) === "/h" ||
+        userInput.substring(0, 2) === "/H" ||
+        userInput.substring(0, 2) === "/m" ||
+        userInput.substring(0, 2) === "/M"
+      ) {
         setPromptHints([]);
       } else {
         const matchedPrompts = promptStore.search(text);

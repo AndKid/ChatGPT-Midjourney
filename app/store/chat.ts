@@ -556,7 +556,6 @@ export const useChatStore = create<ChatStore>()(
           {
             const appConfig = useAppConfig.getState();
             const api = useAccessStore.getState();
-
             const generateVideo = async () => {
               const response = await fetch("/api/generateVideo", {
                 method: "POST",
@@ -629,7 +628,6 @@ export const useChatStore = create<ChatStore>()(
                   const data = await response.json();
                   const { status, video_url_caption, video_url, error } =
                     data.data;
-
                   if (status !== "failed") {
                     if (status === "processing" || status === "waiting") {
                       setTimeout(checkVideoStatus, 2000);
