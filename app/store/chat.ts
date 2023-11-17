@@ -452,97 +452,98 @@ export const useChatStore = create<ChatStore>()(
         ) {
           botMessage.model = "midjourney";
           const startFn = async () => {
-            const prompt = content.substring(3).trim();
-            let action: string = "IMAGINE";
-            console.log(action);
-            const firstSplitIndex = prompt.indexOf("::");
-            if (firstSplitIndex > 0) {
-              action = prompt.substring(0, firstSplitIndex);
-            }
-            if (!["CUSTOM", "IMAGINE", "DESCRIBE", "BLEND"].includes(action)) {
-              botMessage.content = Locale.Midjourney.TaskErrUnknownType;
-              botMessage.streaming = false;
-              return;
-            }
-            botMessage.attr.action = action;
-            let actionIndex: any = null;
-            let actionUseTaskId: any = null;
-            let cmd: any = null;
-            if (action === "CUSTOM") {
-              const s = prompt.substring(firstSplitIndex + 2);
-              const nextIndex = s.indexOf("::");
-              actionUseTaskId = s.substring(0, nextIndex);
-              cmd = s.substring(nextIndex + 2);
-            }
-            try {
-              const imageBase64s =
-                extAttr?.useImages?.map((ui: any) => ui.base64) || [];
-              const res = await fetch("/api/", {
-                method: "POST",
-                headers: getHeaders(),
-                body: JSON.stringify({
-                  prompt: prompt,
-                  images: imageBase64s,
-                  action: action,
-                  cmd: cmd,
-                  index: actionIndex,
-                  taskId: actionUseTaskId,
-                  msgId: extAttr?.botMsg?.msgId,
-                  flags: extAttr?.botMsg?.flags,
-                  msgHash: extAttr?.botMsg?.msgHash,
-                }),
-              });
-              if (res == null) {
-                botMessage.content =
-                  Locale.Midjourney.TaskErrNotSupportType(action);
-                botMessage.streaming = false;
-                return;
+              const prompt = content.substring(3).trim();
+              let action: string = "IMAGINE";
+              console.log(action);
+              const firstSplitIndex = prompt.indexOf("::");
+              if (firstSplitIndex > 0) {
+                  action = prompt.substring(0, firstSplitIndex);
               }
-              if (!res.ok) {
-                const text = await res.text();
-                botMessage.content =
-                  res.status === 401
-                    ? `${Locale.Error.Unauthorized}\n\`\`\`json\n${text}\n\`\`\`\n`
-                    : Locale.Midjourney.TaskSubmitErr(
-                        text || Locale.Midjourney.UnknownError,
+              if (
+                  ![
+                      "CUSTOM",
+                      "IMAGINE",
+                      "DESCRIBE",
+                      "BLEND",
+                  ].includes(action)
+              ) {
+                  botMessage.content = Locale.Midjourney.TaskErrUnknownType;
+                  botMessage.streaming = false;
+                  return;
+              }
+              botMessage.attr.action = action;
+              let actionIndex: any = null;
+              let actionUseTaskId: any = null;
+              let cmd: any = null;
+              if (action === "CUSTOM") {
+                  const s = prompt.substring(firstSplitIndex + 2)
+                  const nextIndex = s.indexOf("::");
+                  actionUseTaskId = s.substring(0, nextIndex)
+                  cmd = s.substring(nextIndex + 2);
+              }
+              try {
+                  const imageBase64s =
+                      extAttr?.useImages?.map((ui: any) => ui.base64) || [];
+                  const res = await fetch("/api/midjourney/task/submit", {
+                      method: "POST",
+                      headers: getHeaders(),
+                      body: JSON.stringify({
+                          prompt: prompt,
+                          images: imageBase64s,
+                          action: action,
+                          cmd: cmd,
+                          index: actionIndex,
+                          taskId: actionUseTaskId,
+                          msgId: extAttr?.botMsg?.msgId,
+                          flags: extAttr?.botMsg?.flags,
+                          msgHash: extAttr?.botMsg?.msgHash,
+                      }),
+                  });
+                  if (res == null) {
+                      botMessage.content =
+                          Locale.Midjourney.TaskErrNotSupportType(action);
+                      botMessage.streaming = false;
+                      return;
+                  }
+                  if (!res.ok) {
+                      const text = await res.text();
+                      botMessage.content = res.status === 401 ? `${Locale.Error.Unauthorized}\n\`\`\`json\n${text}\n\`\`\`\n` : Locale.Midjourney.TaskSubmitErr(
+                          text || Locale.Midjourney.UnknownError,
                       );
-              } else {
-                const resJson = await res.json();
-                if (resJson.status == "FAIL" || resJson.code !== 0) {
+                  } else {
+                      const resJson = await res.json();
+                      if(resJson.status=='FAIL' || resJson.code!==0){
+                          botMessage.content = Locale.Midjourney.TaskSubmitErr(
+                              resJson.msg || resJson.error || Locale.Midjourney.UnknownError,
+                          );
+                      }else{
+                          const taskId: string = resJson.taskId;
+                          const prefixContent = Locale.Midjourney.TaskPrefix(
+                              prompt,
+                              taskId,
+                          );
+                          botMessage.content =
+                              prefixContent +
+                              `[${new Date().toLocaleString()}] - ${
+                                  Locale.Midjourney.TaskSubmitOk
+                              }: ` + Locale.Midjourney.PleaseWait;
+                          botMessage.attr.taskId = taskId;
+                          botMessage.attr.status = resJson.status;
+                          this.fetchMidjourneyStatus(botMessage, extAttr);
+                      }
+                  }
+              } catch (e: any) {
+                  console.error(e);
                   botMessage.content = Locale.Midjourney.TaskSubmitErr(
-                    resJson.msg ||
-                      resJson.error ||
-                      Locale.Midjourney.UnknownError,
+                      e?.error || e?.message || Locale.Midjourney.UnknownError,
                   );
-                } else {
-                  const taskId: string = resJson.taskId;
-                  const prefixContent = Locale.Midjourney.TaskPrefix(
-                    prompt,
-                    taskId,
+              } finally {
+                  ChatControllerPool.remove(
+                      sessionId,
+                      botMessage.id ?? messageIndex,
                   );
-                  botMessage.content =
-                    prefixContent +
-                    `[${new Date().toLocaleString()}] - ${
-                      Locale.Midjourney.TaskSubmitOk
-                    }: ` +
-                    Locale.Midjourney.PleaseWait;
-                  botMessage.attr.taskId = taskId;
-                  botMessage.attr.status = resJson.status;
-                  this.fetchMidjourneyStatus(botMessage, extAttr);
-                }
+                  botMessage.streaming = false;
               }
-            } catch (e: any) {
-              console.error(e);
-              botMessage.content = Locale.Midjourney.TaskSubmitErr(
-                e?.error || e?.message || Locale.Midjourney.UnknownError,
-              );
-            } finally {
-              ChatControllerPool.remove(
-                sessionId,
-                botMessage.id ?? messageIndex,
-              );
-              botMessage.streaming = false;
-            }
           };
           await startFn();
           get().onNewMessage(botMessage);

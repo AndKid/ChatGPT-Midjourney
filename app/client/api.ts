@@ -1,6 +1,6 @@
 import { getClientConfig } from "../config/client";
 import { ACCESS_CODE_PREFIX } from "../constant";
-import {ChatMessage, ModelType, useAccessStore, useAppConfig} from "../store";
+import { ChatMessage, ModelType, useAccessStore, useAppConfig } from "../store";
 import { ChatGPTApi } from "./platforms/openai";
 
 export const ROLES = ["system", "user", "assistant"] as const;
@@ -131,7 +131,6 @@ export function getHeaders() {
     "Content-Type": "application/json",
     "x-requested-with": "XMLHttpRequest",
   };
-
   const makeBearer = (token: string) => `Bearer ${token.trim()}`;
   const validString = (x: string) => x && x.length > 0;
 
