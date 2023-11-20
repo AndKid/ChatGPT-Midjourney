@@ -40,7 +40,7 @@ export const DEFAULT_CONFIG = {
   checkFlag: checkFlag.Auto as checkFlag,
   voiceCheck: voiceCheck.Female as voiceCheck,
   personModel: personModel.FemaleModel as personModel,
-  backColor: "#AF5DED",
+  backColor: "#3175EF",
   backImg: "https://www.dazanim.com/bg.png",
   theme: Theme.Auto as Theme,
   tightBorder: !!getClientConfig()?.isApp,
