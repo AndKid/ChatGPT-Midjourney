@@ -11,7 +11,7 @@ import CloseIcon from "../icons/close.svg";
 import MaskIcon from "../icons/mask.svg";
 import GemIcon from "../icons/gem.svg";
 import DragIcon from "../icons/drag.svg";
-
+import NextImage from "next/image";
 import Locale from "../locales";
 
 import { useAppConfig, useChatStore } from "../store";
@@ -28,6 +28,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useMobileScreen } from "../utils";
 import dynamic from "next/dynamic";
 import { showConfirm, showToast } from "./ui-lib";
+import Image from "next/image";
 
 const ChatList = dynamic(async () => (await import("./chat-list")).ChatList, {
   loading: () => null,
@@ -118,26 +119,29 @@ export function SideBar(props: { className?: string }) {
     >
       <div className={styles["sidebar-header"]} data-tauri-drag-region>
         <div className={styles["sidebar-title"]} data-tauri-drag-region>
-        GRANDSHORES INTELLIGENCE BETA
+          <img
+            src="
+https://static-new.tokshine.com/xa.png"
+            width="100%"
+          ></img>
         </div>
-        
       </div>
 
       <div className={styles["sidebar-header-bar"]}>
-        <IconButton
+        {/* <IconButton
           icon={<MaskIcon />}
           text={shouldNarrow ? undefined : Locale.Mask.Name}
           className={styles["sidebar-bar-button"]}
           onClick={() => navigate(Path.NewChat, { state: { fromHome: true } })}
           shadow
-        />
-        <IconButton
+        /> */}
+        {/* <IconButton
           icon={<GemIcon />}
           text={shouldNarrow ? undefined : "Pro"}
           className={styles["sidebar-bar-button"]}
           onClick={() => window.open(REPO_URL + "-Pro", "_blank")}
           shadow
-        />
+        /> */}
       </div>
 
       <div
@@ -168,11 +172,11 @@ export function SideBar(props: { className?: string }) {
               <IconButton icon={<SettingsIcon />} shadow />
             </Link>
           </div>
-          <div className={styles["sidebar-action"]}>
+          {/* <div className={styles["sidebar-action"]}>
             <a href={REPO_URL} target="_blank">
               <IconButton icon={<GithubIcon />} shadow />
             </a>
-          </div>
+          </div> */}
         </div>
         <div>
           <IconButton
